@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprint Timeline Options</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #003399;
+            --secondary-color: #0A7CC1;
+            --accent-color: #4cc9f0;
+            --success-color: #4CAF50;
+            --warning-color: #f8961e;
+            --danger-color: #f94144;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-light: #e9ecef;
+            --gray-medium: #6c757d;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            padding: 2rem;
+        }
+
+        .option-container {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .option-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        /* OPTION 1: Horizontal Progress Bar Timeline */
+        .timeline-horizontal {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-track {
+            position: relative;
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            margin: 2rem 0;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color) 0%, var(--accent-color) 100%);
+            border-radius: 4px;
+            width: 20%; /* Current progress */
+            transition: width 0.5s ease;
+        }
+
+        .sprint-marker {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sprint-marker.completed {
+            background: var(--success-color);
+            left: 6.67%; /* Day 5 / 75 */
+        }
+
+        .sprint-marker.active {
+            background: var(--accent-color);
+            left: 25.33%; /* Day 19 / 75 */
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 0 8px rgba(76, 201, 240, 0.2);
+        }
+
+        .sprint-marker.upcoming {
+            background: var(--gray-medium);
+            left: 44%; /* Day 33 / 75 */
+        }
+
+        .sprint-marker:nth-of-type(4) { left: 62.67%; } /* Day 47 */
+        .sprint-marker:nth-of-type(5) { left: 81.33%; } /* Day 61 */
+        .sprint-marker:nth-of-type(6) { left: 100%; } /* Day 75 */
+
+        .sprint-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .sprint-label {
+            text-align: center;
+            max-width: 120px;
+        }
+
+        .sprint-label h6 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--dark-color);
+        }
+
+        .sprint-label .sprint-days {
+            font-size: 0.75rem;
+            color: var(--gray-medium);
+        }
+
+        .sprint-label.completed h6 { color: var(--success-color); }
+        .sprint-label.active h6 { color: var(--accent-color); }
+
+        /* OPTION 2: Circular/Radial Progress Timeline */
+        .timeline-circular {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .circular-progress {
+            width: 300px;
+            height: 300px;
+            position: relative;
+        }
+
+        .circular-svg {
+            transform: rotate(-90deg);
+        }
+
+        .circular-bg {
+            fill: none;
+            stroke: var(--gray-light);
+            stroke-width: 12;
+        }
+
+        .circular-progress-bar {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 942;
+            stroke-dashoffset: 754; /* 20% progress */
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .circular-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .circular-center .progress-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .circular-center .progress-label {
+            font-size: 0.9rem;
+            color: var(--gray-medium);
+        }
+
+        .sprint-points {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sprint-point {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transform: translate(-50%, -50%);
+        }
+
+        .sprint-point.completed {
+            background: var(--success-color);
+        }
+
+        .sprint-point.active {
+            background: var(--accent-color);
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 0 6px rgba(76, 201, 240, 0.3);
+        }
+
+        .sprint-point.upcoming {
+            background: var(--gray-medium);
+        }
+
+        /* Position sprint points around circle */
+        .sprint-point:nth-child(1) { top: 10%; left: 50%; } /* Sprint 0 */
+        .sprint-point:nth-child(2) { top: 50%; left: 90%; } /* Sprint 1 */
+        .sprint-point:nth-child(3) { top: 90%; left: 75%; } /* Sprint 2 */
+        .sprint-point:nth-child(4) { top: 90%; left: 25%; } /* Sprint 3 */
+        .sprint-point:nth-child(5) { top: 50%; left: 10%; } /* Sprint 4 */
+        .sprint-point:nth-child(6) { top: 10%; left: 25%; } /* Sprint 5 */
+
+        /* OPTION 3: Card Grid with Progress Indicators */
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem 0;
+        }
+
+        .sprint-card-mini {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--gray-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sprint-card-mini::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gray-light);
+            transition: all 0.3s ease;
+        }
+
+        .sprint-card-mini.completed::before {
+            background: var(--success-color);
+        }
+
+        .sprint-card-mini.active::before {
+            background: linear-gradient(90deg, var(--success-color) 0%, var(--accent-color) 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        .sprint-card-mini:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .sprint-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .sprint-card-mini.completed .sprint-number {
+            color: var(--success-color);
+        }
+
+        .sprint-card-mini.active .sprint-number {
+            color: var(--accent-color);
+        }
+
+        .sprint-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .sprint-duration {
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+            margin-bottom: 1rem;
+        }
+
+        .sprint-progress-bar {
+            height: 6px;
+            background: var(--gray-light);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .sprint-progress-fill {
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .sprint-card-mini.completed .sprint-progress-fill {
+            width: 100%;
+            background: var(--success-color);
+        }
+
+        .sprint-card-mini.active .sprint-progress-fill {
+            width: 60%;
+        }
+
+        /* OPTION 4: Stepped Progress Bar */
+        .timeline-stepped {
+            padding: 2rem 0;
+        }
+
+        .stepped-track {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .stepped-track::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gray-light);
+            z-index: 0;
+        }
+
+        .stepped-progress {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--success-color) 0%, var(--accent-color) 100%);
+            z-index: 1;
+            width: 25%; /* Current progress */
+            transition: width 0.5s ease;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .step-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-medium);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .step.completed .step-icon {
+            background: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+
+        .step.active .step-icon {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 0 8px rgba(76, 201, 240, 0.2);
+        }
+
+        .step-info {
+            text-align: center;
+            max-width: 150px;
+        }
+
+        .step-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .step-days {
+            font-size: 0.75rem;
+            color: var(--gray-medium);
+        }
+
+        .step.completed .step-title {
+            color: var(--success-color);
+        }
+
+        .step.active .step-title {
+            color: var(--accent-color);
+        }
+
+        .step-connector {
+            position: absolute;
+            top: 24px;
+            left: 50%;
+            width: 100%;
+            height: 4px;
+            background: var(--gray-light);
+            z-index: 0;
+        }
+
+        .step:not(:last-child) .step-connector {
+            display: block;
+        }
+
+        .step.completed .step-connector {
+            background: var(--success-color);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-5" style="color: var(--primary-color);">Sprint Timeline Visual Options</h1>
+
+        <!-- OPTION 1: Horizontal Progress Bar -->
+        <div class="option-container">
+            <div class="option-title">Option 1: Horizontal Progress Bar Timeline</div>
+            <p class="text-muted mb-4">Clean horizontal progress bar with sprint markers and labels below</p>
+            <div class="timeline-horizontal">
+                <div class="timeline-track">
+                    <div class="timeline-progress"></div>
+                    <div class="sprint-marker completed" title="Sprint 0: Foundation & Launch"></div>
+                    <div class="sprint-marker active" title="Sprint 1: Activation"></div>
+                    <div class="sprint-marker upcoming" title="Sprint 2: Acceleration"></div>
+                    <div class="sprint-marker upcoming" title="Sprint 3: Expansion"></div>
+                    <div class="sprint-marker upcoming" title="Sprint 4: Optimization"></div>
+                    <div class="sprint-marker upcoming" title="Sprint 5: Institutionalization"></div>
+                </div>
+                <div class="sprint-labels">
+                    <div class="sprint-label completed">
+                        <h6>Sprint 0</h6>
+                        <div class="sprint-days">Days 1-5</div>
+                        <div class="sprint-days" style="color: var(--success-color); font-weight: 600;">✓ Complete</div>
+                    </div>
+                    <div class="sprint-label active">
+                        <h6>Sprint 1</h6>
+                        <div class="sprint-days">Days 6-19</div>
+                        <div class="sprint-days" style="color: var(--accent-color); font-weight: 600;">● Active</div>
+                    </div>
+                    <div class="sprint-label">
+                        <h6>Sprint 2</h6>
+                        <div class="sprint-days">Days 20-33</div>
+                    </div>
+                    <div class="sprint-label">
+                        <h6>Sprint 3</h6>
+                        <div class="sprint-days">Days 34-47</div>
+                    </div>
+                    <div class="sprint-label">
+                        <h6>Sprint 4</h6>
+                        <div class="sprint-days">Days 48-61</div>
+                    </div>
+                    <div class="sprint-label">
+                        <h6>Sprint 5</h6>
+                        <div class="sprint-days">Days 62-75</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OPTION 2: Circular/Radial Progress -->
+        <div class="option-container">
+            <div class="option-title">Option 2: Circular/Radial Progress Timeline</div>
+            <p class="text-muted mb-4">Circular progress indicator with sprint points positioned around the circle</p>
+            <div class="timeline-circular">
+                <div class="circular-progress">
+                    <svg class="circular-svg" width="300" height="300">
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:var(--success-color);stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:var(--accent-color);stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="circular-bg" cx="150" cy="150" r="150"></circle>
+                        <circle class="circular-progress-bar" cx="150" cy="150" r="150"></circle>
+                    </svg>
+                    <div class="circular-center">
+                        <div class="progress-value">20%</div>
+                        <div class="progress-label">Complete</div>
+                    </div>
+                    <div class="sprint-points">
+                        <div class="sprint-point completed" title="Sprint 0"></div>
+                        <div class="sprint-point active" title="Sprint 1"></div>
+                        <div class="sprint-point upcoming" title="Sprint 2"></div>
+                        <div class="sprint-point upcoming" title="Sprint 3"></div>
+                        <div class="sprint-point upcoming" title="Sprint 4"></div>
+                        <div class="sprint-point upcoming" title="Sprint 5"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4 text-center">
+                    <div class="sprint-label completed">
+                        <h6>Sprint 0: Foundation</h6>
+                        <div class="sprint-days">Days 1-5</div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="sprint-label active">
+                        <h6>Sprint 1: Activation</h6>
+                        <div class="sprint-days">Days 6-19</div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="sprint-label">
+                        <h6>Sprint 2-5: Upcoming</h6>
+                        <div class="sprint-days">Days 20-75</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OPTION 3: Card Grid -->
+        <div class="option-container">
+            <div class="option-title">Option 3: Card Grid with Progress Indicators</div>
+            <p class="text-muted mb-4">Grid of sprint cards with individual progress bars and status indicators</p>
+            <div class="timeline-grid">
+                <div class="sprint-card-mini completed">
+                    <div class="sprint-number">0</div>
+                    <div class="sprint-name">Foundation & Launch</div>
+                    <div class="sprint-duration">Days 1-5</div>
+                    <div class="sprint-progress-bar">
+                        <div class="sprint-progress-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="mt-2" style="font-size: 0.75rem; color: var(--success-color); font-weight: 600;">
+                        <i class="bi bi-check-circle"></i> Complete
+                    </div>
+                </div>
+                <div class="sprint-card-mini active">
+                    <div class="sprint-number">1</div>
+                    <div class="sprint-name">Activation</div>
+                    <div class="sprint-duration">Days 6-19</div>
+                    <div class="sprint-progress-bar">
+                        <div class="sprint-progress-fill" style="width: 60%"></div>
+                    </div>
+                    <div class="mt-2" style="font-size: 0.75rem; color: var(--accent-color); font-weight: 600;">
+                        <i class="bi bi-arrow-right-circle"></i> Active
+                    </div>
+                </div>
+                <div class="sprint-card-mini">
+                    <div class="sprint-number">2</div>
+                    <div class="sprint-name">Acceleration</div>
+                    <div class="sprint-duration">Days 20-33</div>
+                    <div class="sprint-progress-bar">
+                        <div class="sprint-progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="mt-2" style="font-size: 0.75rem; color: var(--gray-medium);">
+                        <i class="bi bi-clock"></i> Upcoming
+                    </div>
+                </div>
+                <div class="sprint-card-mini">
+                    <div class="sprint-number">3</div>
+                    <div class="sprint-name">Expansion</div>
+                    <div class="sprint-duration">Days 34-47</div>
+                    <div class="sprint-progress-bar">
+                        <div class="sprint-progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="mt-2" style="font-size: 0.75rem; color: var(--gray-medium);">
+                        <i class="bi bi-clock"></i> Upcoming
+                    </div>
+                </div>
+                <div class="sprint-card-mini">
+                    <div class="sprint-number">4</div>
+                    <div class="sprint-name">Optimization</div>
+                    <div class="sprint-duration">Days 48-61</div>
+                    <div class="sprint-progress-bar">
+                        <div class="sprint-progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="mt-2" style="font-size: 0.75rem; color: var(--gray-medium);">
+                        <i class="bi bi-clock"></i> Upcoming
+                    </div>
+                </div>
+                <div class="sprint-card-mini">
+                    <div class="sprint-number">5</div>
+                    <div class="sprint-name">Institutionalization</div>
+                    <div class="sprint-duration">Days 62-75</div>
+                    <div class="sprint-progress-bar">
+                        <div class="sprint-progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="mt-2" style="font-size: 0.75rem; color: var(--gray-medium);">
+                        <i class="bi bi-clock"></i> Upcoming
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OPTION 4: Stepped Progress Bar -->
+        <div class="option-container">
+            <div class="option-title">Option 4: Stepped Progress Bar</div>
+            <p class="text-muted mb-4">Horizontal stepped progress bar with numbered steps and connecting lines</p>
+            <div class="timeline-stepped">
+                <div class="stepped-track">
+                    <div class="stepped-progress"></div>
+                    <div class="step completed">
+                        <div class="step-icon">0</div>
+                        <div class="step-info">
+                            <div class="step-title">Foundation</div>
+                            <div class="step-days">Days 1-5</div>
+                        </div>
+                    </div>
+                    <div class="step active">
+                        <div class="step-icon">1</div>
+                        <div class="step-info">
+                            <div class="step-title">Activation</div>
+                            <div class="step-days">Days 6-19</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">2</div>
+                        <div class="step-info">
+                            <div class="step-title">Acceleration</div>
+                            <div class="step-days">Days 20-33</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">3</div>
+                        <div class="step-info">
+                            <div class="step-title">Expansion</div>
+                            <div class="step-days">Days 34-47</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">4</div>
+                        <div class="step-info">
+                            <div class="step-title">Optimization</div>
+                            <div class="step-days">Days 48-61</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">5</div>
+                        <div class="step-info">
+                            <div class="step-title">Institutionalization</div>
+                            <div class="step-days">Days 62-75</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
