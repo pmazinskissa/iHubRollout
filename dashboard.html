@@ -796,60 +796,395 @@
         }
 
         .sprint-details-container {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 2px solid var(--gray-light);
+            margin-top: 2.5rem;
+            padding-top: 0;
             display: none;
         }
 
         .sprint-details-container.active {
             display: block;
-            animation: fadeIn 0.3s ease-out;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
         }
 
         .sprint-details-content {
-            background: white;
-            border-radius: 0.75rem;
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 1.25rem;
+            padding: 0;
+            box-shadow: 
+                0 20px 40px rgba(0, 51, 153, 0.12),
+                0 8px 16px rgba(0, 51, 153, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(76, 201, 240, 0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sprint-details-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 50%, var(--secondary-color) 100%);
+        }
+
+        .sprint-details-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: 1.75rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sprint-details-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .sprint-details-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: 20%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .sprint-number-badge {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .sprint-header-text {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sprint-header-text h4 {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 0.25rem 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sprint-header-text .sprint-duration-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.35rem 0.85rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 500;
+        }
+
+        .sprint-details-body {
             padding: 2rem;
-            box-shadow: 0 8px 25px rgba(0, 51, 153, 0.15);
-            border: 1px solid rgba(76, 201, 240, 0.2);
-            animation: slideIn 0.5s ease-out forwards;
         }
 
-        .sprint-details-content .sprint-objectives {
-            font-size: 1.05rem;
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-            color: var(--dark-color);
+        .sprint-objectives-card {
+            background: linear-gradient(135deg, rgba(0, 51, 153, 0.04) 0%, rgba(76, 201, 240, 0.06) 100%);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(76, 201, 240, 0.15);
+            position: relative;
+            overflow: hidden;
         }
 
-        .sprint-details-content h5 {
-            font-size: 1.2rem;
-            font-weight: 600;
+        .sprint-objectives-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .sprint-objectives-card .objectives-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             color: var(--primary-color);
-            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .sprint-objectives-card .objectives-label i {
+            font-size: 1rem;
+        }
+
+        .sprint-objectives-card p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+        .deliverables-section {
+            margin-bottom: 2rem;
+        }
+
+        .deliverables-section h5 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--gray-light);
+        }
+
+        .deliverables-section h5 i {
+            color: var(--secondary-color);
+            font-size: 1.25rem;
+        }
+
+        .deliverables-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 992px) {
+            .deliverables-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .deliverables-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .deliverable-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.25rem;
+            border: 1px solid var(--gray-light);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: scaleIn 0.4s ease-out forwards;
+            opacity: 0;
+            transform: scale(0.95);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            min-height: 120px;
+        }
+
+        .deliverable-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--success-color) 0%, var(--accent-color) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .deliverable-card:hover::before {
+            opacity: 1;
+        }
+
+        .deliverable-card:nth-child(1) { animation-delay: 0.1s; }
+        .deliverable-card:nth-child(2) { animation-delay: 0.15s; }
+        .deliverable-card:nth-child(3) { animation-delay: 0.2s; }
+        .deliverable-card:nth-child(4) { animation-delay: 0.25s; }
+        .deliverable-card:nth-child(5) { animation-delay: 0.3s; }
+        .deliverable-card:nth-child(6) { animation-delay: 0.35s; }
+
+        @keyframes scaleIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .deliverable-card:hover {
+            background: linear-gradient(145deg, #ffffff 0%, rgba(76, 201, 240, 0.06) 100%);
+            border-color: rgba(76, 201, 240, 0.35);
+            transform: translateY(-4px);
+            box-shadow: 
+                0 12px 24px rgba(0, 51, 153, 0.1),
+                0 4px 8px rgba(76, 201, 240, 0.08);
+        }
+
+        .deliverable-checkbox {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            border-radius: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            margin-bottom: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid var(--gray-light);
+            background: white;
+            color: transparent;
+        }
+
+        .deliverable-checkbox:hover {
+            border-color: var(--accent-color);
+            background: rgba(76, 201, 240, 0.08);
+            transform: scale(1.05);
+        }
+
+        .deliverable-checkbox.checked {
+            background: linear-gradient(135deg, var(--success-color) 0%, #2dd4bf 100%);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 3px 10px rgba(76, 175, 80, 0.25);
+            animation: checkPop 0.3s ease-out;
+        }
+
+        @keyframes checkPop {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .deliverable-card.completed {
+            background: linear-gradient(145deg, rgba(76, 175, 80, 0.06) 0%, rgba(45, 212, 191, 0.04) 100%);
+            border-color: rgba(76, 175, 80, 0.2);
+        }
+
+        .deliverable-card.completed .deliverable-text {
+            color: var(--gray-medium);
+        }
+
+        .deliverable-text {
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .milestone-card {
+            background: linear-gradient(135deg, rgba(76, 201, 240, 0.12) 0%, rgba(0, 51, 153, 0.08) 100%);
+            border-radius: 1rem;
+            padding: 1.75rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(76, 201, 240, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 51, 153, 0.06);
+        }
+
+        .milestone-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color) 0%, var(--success-color) 100%);
+        }
+
+        .milestone-card::after {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(76, 201, 240, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .milestone-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             margin-bottom: 1rem;
         }
 
-        .sprint-details-content ul {
-            font-size: 1rem;
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
+        .milestone-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 12px rgba(76, 201, 240, 0.3);
         }
 
-        .sprint-details-content .milestone {
-            background: rgba(76, 201, 240, 0.1);
-            padding: 1.25rem;
-            border-radius: 0.5rem;
-            border-left: 4px solid var(--accent-color);
-            margin-top: 1.5rem;
+        .milestone-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--secondary-color);
         }
 
-        .sprint-details-content .milestone strong {
-            color: var(--primary-color);
+        .milestone-text {
             font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--dark-color);
+            position: relative;
+            z-index: 1;
         }
 
+        .milestone-text strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* Legacy styles for expandable sections */
         .sprint-details-expandable .sprint-objectives {
             margin-bottom: 1rem;
             color: var(--dark-color);
@@ -1750,7 +2085,6 @@
                     <div class="tool-item">
                         <img src="logos/obsidian.png" alt="Obsidian" class="tool-logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23483699\'/%3E%3Ctext x=\'50\' y=\'60\' font-size=\'25\' fill=\'white\' text-anchor=\'middle\'%3EObsidian%3C/text%3E%3C/svg%3E'">
                         <div class="tool-name">Obsidian</div>
-                        <div class="tool-variant">Any MD Reader</div>
                     </div>
                     <div class="tool-item">
                         <img src="logos/gamma.png" alt="Specialized AI Tools" class="tool-logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23666\'/%3E%3Ctext x=\'50\' y=\'50\' font-size=\'18\' fill=\'white\' text-anchor=\'middle\'%3ESpecialized%3C/text%3E%3Ctext x=\'50\' y=\'70\' font-size=\'18\' fill=\'white\' text-anchor=\'middle\'%3EAI Tools%3C/text%3E%3C/svg%3E'">
@@ -2056,6 +2390,24 @@
             }
         };
 
+        const sprintNames = {
+            0: 'Foundation & Launch',
+            1: 'Activation',
+            2: 'Acceleration',
+            3: 'Expansion',
+            4: 'Optimization',
+            5: 'Institutionalization'
+        };
+
+        const sprintDurations = {
+            0: 'Days 1-5',
+            1: 'Days 6-19',
+            2: 'Days 20-33',
+            3: 'Days 34-47',
+            4: 'Days 48-61',
+            5: 'Days 62-75'
+        };
+
         function showSprintDetails(sprintNum, cardElement) {
             // Remove selected class from all cards
             document.querySelectorAll('.sprint-card-mini').forEach(card => {
@@ -2069,19 +2421,64 @@
             const sprint = sprintData[sprintNum];
             if (!sprint) return;
 
-            // Build HTML content
-            let deliverablesHTML = sprint.deliverables.map(item => `<li>${item}</li>`).join('');
+            // Build deliverables HTML as cards with interactive checkboxes
+            let deliverablesHTML = sprint.deliverables.map((item, index) => `
+                <div class="deliverable-card" data-deliverable="${sprintNum}-${index}">
+                    <span class="deliverable-checkbox" onclick="toggleDeliverable(this)">
+                        <i class="bi bi-check2"></i>
+                    </span>
+                    <span class="deliverable-text">${item}</span>
+                </div>
+            `).join('');
+
+            // Extract milestone day number for emphasis
+            const milestoneMatch = sprint.milestone.match(/Day (\d+)/);
+            const milestoneDay = milestoneMatch ? milestoneMatch[1] : '';
+            const milestoneParts = sprint.milestone.split(' - ');
+            const milestoneTitle = milestoneParts[0] || '';
+            const milestoneDesc = milestoneParts.slice(1).join(' - ') || sprint.milestone;
 
             const contentHTML = `
-                <div class="sprint-objectives">
-                    <strong>Objectives:</strong> ${sprint.objectives}
+                <div class="sprint-details-header">
+                    <div class="sprint-number-badge">${sprintNum}</div>
+                    <div class="sprint-header-text">
+                        <h4>Sprint ${sprintNum}: ${sprintNames[sprintNum]}</h4>
+                        <span class="sprint-duration-badge">
+                            <i class="bi bi-calendar3"></i>
+                            ${sprintDurations[sprintNum]}
+                        </span>
+                    </div>
                 </div>
-                <h5>Key Deliverables:</h5>
-                <ul>
-                    ${deliverablesHTML}
-                </ul>
-                <div class="milestone">
-                    <strong>Milestone:</strong> ${sprint.milestone}
+                <div class="sprint-details-body">
+                    <div class="sprint-objectives-card">
+                        <div class="objectives-label">
+                            <i class="bi bi-bullseye"></i>
+                            Objectives
+                        </div>
+                        <p>${sprint.objectives}</p>
+                    </div>
+                    
+                    <div class="deliverables-section">
+                        <h5>
+                            <i class="bi bi-list-check"></i>
+                            Key Deliverables
+                        </h5>
+                        <div class="deliverables-grid">
+                            ${deliverablesHTML}
+                        </div>
+                    </div>
+                    
+                    <div class="milestone-card">
+                        <div class="milestone-header">
+                            <div class="milestone-icon">
+                                <i class="bi bi-flag-fill"></i>
+                            </div>
+                            <span class="milestone-label">Milestone Checkpoint</span>
+                        </div>
+                        <p class="milestone-text">
+                            <strong>${milestoneTitle}</strong> ${milestoneDesc ? '— ' + milestoneDesc : ''}
+                        </p>
+                    </div>
                 </div>
             `;
 
@@ -2095,6 +2492,14 @@
             setTimeout(() => {
                 container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 100);
+        }
+
+        // Toggle deliverable checkbox
+        function toggleDeliverable(checkbox) {
+            event.stopPropagation(); // Prevent card hover effects from interfering
+            checkbox.classList.toggle('checked');
+            const card = checkbox.closest('.deliverable-card');
+            card.classList.toggle('completed');
         }
 
 
